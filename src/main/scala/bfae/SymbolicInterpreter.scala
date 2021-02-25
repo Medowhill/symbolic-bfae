@@ -58,7 +58,7 @@ object SymbolicInterpreter {
   def set(a: Int, v: SymbolicValue): Interp[Unit] =
     Interp((sto, cst) => (Right(()), sto + (a -> v), cst) :: Nil)
 
-  def cstrain[A](l: (A, Constraint)*): Interp[A] =
+  def constrain[A](l: (A, Constraint)*): Interp[A] =
     Interp((sto, cst) => l.toList.map{
       case (a, c) => (Right(a), sto, cst && c)
     })
@@ -86,7 +86,7 @@ object SymbolicInterpreter {
       for (
         cv <- interp(c, env);
         c <- getInt(cv);
-        e <- cstrain(
+        e <- constrain(
           (t, c !== IntFormula.Zero),
           (f, c === IntFormula.Zero)
         );
